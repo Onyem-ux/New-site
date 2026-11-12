@@ -109,6 +109,7 @@ export default function Home() {
   // Music
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const wasPlayingBeforeHide = useRef(false);
 
   // Called when the intro circle is clicked
   const startMusic = () => {
@@ -128,6 +129,27 @@ export default function Home() {
       audio.pause();
     }
   };
+
+  // Pause the music when the page is hidden (tab switch, minimize, app
+  // backgrounded) and resume it when the visitor comes back, but only if
+  // it was playing before they left.
+  useEffect(() => {
+    const handleVisibility = () => {
+      const audio = audioRef.current;
+      if (!audio) return;
+
+      if (document.hidden) {
+        wasPlayingBeforeHide.current = !audio.paused;
+        audio.pause();
+      } else if (wasPlayingBeforeHide.current) {
+        audio.play().catch(() => {});
+        wasPlayingBeforeHide.current = false;
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibility);
+    return () => document.removeEventListener("visibilitychange", handleVisibility);
+  }, []);
 
   // Countdown
   const [timeLeft, setTimeLeft] = useState<TimeLeft | null>(null);
