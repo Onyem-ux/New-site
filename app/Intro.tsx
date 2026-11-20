@@ -277,6 +277,8 @@ type Phase = "idle" | "playing" | "done";
 type IntroProps = {
   photos?: string[]; // add as many as you like
   names?: [string, string, string]; // stacked top → bottom
+  tagline?: string; // supporting line displayed beneath the names
+  location?: string;
   storyHref?: string; // where the text link under the names goes
   storyLabel?: string;
   scrollHref?: string; // where the "Scroll down" hint goes
@@ -287,7 +289,8 @@ type IntroProps = {
 
 export default function Intro({
   photos = ["/1.jpeg", "/2.jpeg", "/3.jpeg", "/4.jpeg", "/5.jpeg"],
-  names = ["Lolia", "&", "Joshua"],
+  names = ["Praise", "&", "Reks"],
+  tagline = "",
   storyHref = "#story",
   storyLabel = "Read our story",
   scrollHref = "#countdown",
@@ -759,6 +762,9 @@ export default function Intro({
                     <span className="amp">{names[1]}</span>
                     <span>{names[2]}</span>
                   </h1>
+                  {tagline.trim() !== "" && (
+                    <p className="hero-tagline">{tagline}</p>
+                  )}
                   <Link href={storyHref} className="story-cta">
                     {storyLabel}
                     <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
@@ -1078,6 +1084,15 @@ const CSS = `
 .names span { display: block; }
 .names .amp { font-size: 0.6em; color: #C0070A; }
 
+.hero-tagline {
+  max-width: min(82vw, 520px);
+  margin: -8px 0 0;
+  color: #6a6258;
+  font: 400 clamp(12px, 1.15vw, 15px)/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  letter-spacing: 0.04em;
+  text-align: center;
+}
+
 /* Text link with an arrow (no button shape) */
 .story-cta {
   display: inline-flex;
@@ -1147,6 +1162,7 @@ const CSS = `
   .baseboard { height: 2.6%; }
   .hero-center { top: 52.5%; gap: 16px; }
   .names { font-size: clamp(44px, 17vw, 96px); }
+  .hero-tagline { max-width: 78vw; margin-top: -5px; font-size: 12px; }
   .story-cta { padding: 4px 0; font-size: 11px; gap: 8px; }
   .story-cta svg { width: 15px; height: 15px; }
   .scroll-hint { display: none; }
